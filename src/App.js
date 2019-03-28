@@ -76,11 +76,11 @@ class App extends Component {
 
     return (
       !this.state.isAuthenticating && // Do not render until isAuthenticating is false
-      <div className="App container">
-        <Navbar fluid collapseOnSelect>
+      <div className="App">
+        <Navbar inverse fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Scratch</Link>
+              <Link to="/">SmartServe</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
