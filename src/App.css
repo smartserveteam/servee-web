@@ -1,7 +1,16 @@
-.App {
-  margin-top: 15px;
-}
-
 .App .navbar-brand {
   font-weight: bold;
+}
+
+.navbar {
+  margin-bottom: 0px;
+  border-radius: 0px;
+}
+
+.navbar>.container-fluid .navbar-brand {
+  margin-left: 0px;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
 }
