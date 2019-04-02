@@ -77,10 +77,10 @@ class App extends Component {
     return (
       !this.state.isAuthenticating && // Do not render until isAuthenticating is false
       <div className="App">
-        <Navbar inverse fluid collapseOnSelect>
+        <Navbar fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">SmartServe</Link>
+              <Link to="/">Servee</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
@@ -88,8 +88,8 @@ class App extends Component {
             <Nav pullRight>
               {this.state.isAuthenticated
                 ? <Fragment>
-                  <LinkContainer to="/settings">
-                    <NavItem>Settings</NavItem>
+                  <LinkContainer to="/profile">
+                    <NavItem>Profile</NavItem>
                   </LinkContainer>
                   <NavItem onClick={this.handleLogout}>Logout</NavItem>
                 </Fragment>

@@ -38,7 +38,7 @@
   background-repeat: no-repeat;
   height: 380px;
   position: relative;
-  text-align: center;
+  /* text-align: center; */
   background-position: 50%;
 }
 
@@ -64,6 +64,7 @@
   position: relative;
   font-size: 47px;
   padding-top: 46px;
+  text-align: center;
 }
 
 .title-subtitle {
@@ -74,17 +75,25 @@
   z-index: 4;
   position: relative;
   text-shadow: 0 1px 8px rgba(0,0,0,.4);
+  text-align: center;
 }
 
 .title-form {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
 }
 
 .title-location {
+  border: 0;
   border-radius: 4px;
-  height: 54px;
-  z-index: 5;
+  font-family: Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  min-width: 150px;
+  min-height: 54px;
+  vertical-align: middle;
+  font-size: 20px;
+  padding-left: 10px;
   position: relative;
+  z-index: 5;
 }
 
 .title-search {
@@ -92,10 +101,81 @@
   border-radius: 4px;
   font-family: Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   width: 410px;
-  height: 54px;
+  min-height: 54px;
   vertical-align: middle;
   font-size: 20px;
   padding-left: 10px;
   position: relative;
   z-index: 5;
+}
+
+.Select-control {
+  height: 54px;
+}
+
+.top-categories {
+  padding-bottom: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 10px;
+  background-color: #eee;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.top-category {
+  opacity: 0.5;
+}
+
+.top-category:hover {
+  opacity: 1;
+}
+
+.top-category-icon {
+  color: #666;
+  padding-top: 10px;
+}
+
+.top-category-text {
+  color: #444;
+  padding-top: 10px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+.recommended-services-section {
+  padding-bottom: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 10px;
+  width: 100%;
+}
+
+.recommended-services-group {
+  display: inline-flex;
+}
+
+.recommended-service {
+  display: block;
+  padding-right: 15px;
+}
+
+.recommended-service-title {
+  font-weight: 600;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size: 20px;
+  padding-bottom: 15px;
+}
+
+.recommended-service-image {
+  height: 140px;
+  width: 269px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.recommended-service-text {
+  color: #000;
+  font-size: 14px;
 }

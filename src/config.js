@@ -6,13 +6,13 @@ export default {
   },
   apiGateway: {
     REGION: "eu-central-1",
-    URL: "https://22e751g7i4.execute-api.eu-central-1.amazonaws.com/dev"
+    URL: "https://3i6hhgx754.execute-api.eu-central-1.amazonaws.com/dev"
   },
   cognito: {
     REGION: "eu-central-1",
-    USER_POOL_ID: "eu-central-1_5v1HNXCiJ",
-    APP_CLIENT_ID: "6638nn1gjggdul1sm3e7atn2e1",
-    IDENTITY_POOL_ID: "eu-central-1:9fce1e39-e7ee-452b-97e0-ceb5f791f51b"
+    USER_POOL_ID: "eu-central-1_A5x9SBgkA",
+    APP_CLIENT_ID: "7v9e316ei5a250p59be4fh28fe",
+    IDENTITY_POOL_ID: "eu-central-1:12683e1d-9d8b-4842-96e1-f8cb233bd104"
   },
   social: {
     FB: "437354300382315"
