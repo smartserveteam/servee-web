@@ -1,83 +1,112 @@
 import React, { Component } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { HelpBlock, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {
+  FormGroup, FormControl,
+  HelpBlock,
+  ControlLabel, Button,
+  ToggleButtonGroup, ToggleButton,
+  Modal,
+  ListGroup, ListGroupItem
+} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./Settings.css";
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
+import config from "../config";
+
+const professional = config.fields.professional;
+const individual = config.fields.individual;
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
 
+    this.handleShowSkills = this.handleShowSkills.bind(this);
+    this.handleCloseSkills = this.handleCloseSkills.bind(this);
+
     this.state = {
       isLoading: false,
+      type: "",
       firstName: "",
       lastName: "",
       address: "",
       city: "",
       postal_code: "",
       state: "",
-      country: ""
+      country: "",
+      showSkills: false,
+      skills: []
     };
   }
 
-  async populateUserInformation() {
-
-    console.log("Getting current user info");
-    // Get user info
-    var userData = await Auth.currentUserInfo();
-
-    console.log(userData);
-    this.setState({ firstName: userData.attributes.given_name || "" });
-    this.setState({ lastName: userData.attributes.family_name || "" });
-    this.setState({ address: userData.attributes.address || "" });
-    this.setState({ city: userData.attributes["custom:city"] || "" });
-    this.setState({ postal_code: userData.attributes["custom:postal_code"] || "" });
-    this.setState({ state: userData.attributes["custom:state"] || "" });
-    this.setState({ country: userData.attributes["custom:country"] || "" });
-  }
-
   async componentDidMount() {
-    this.populateUserInformation();
+    // Get user info
+    var userInfo = await Auth.currentUserInfo();
+    console.log("User Info:", userInfo);
+
+    this.setState({ firstName: userInfo.attributes[config.cognito.attributes.firstName] || "" });
+    this.setState({ lastName: userInfo.attributes[config.cognito.attributes.lastName] || "" });
+    this.setState({ address: userInfo.attributes[config.cognito.attributes.address] || "" });
+    this.setState({ postal_code: userInfo.attributes[config.cognito.attributes.postalCode] || "" });
+    this.setState({ city: userInfo.attributes[config.cognito.attributes.city] || "" });
+    this.setState({ state: userInfo.attributes[config.cognito.attributes.state] || "" });
+    this.setState({ country: userInfo.attributes[config.cognito.attributes.country] || "" });
+    this.setState({ type: userInfo.attributes[config.cognito.attributes.type] });
+
+    if (this.state.type === professional) {
+      const skills = await this.skills();
+      console.log("Skills:", skills);
+      this.setState({ skills });
+    }
   }
 
-  validateForm() {
-    return (
-      this.state.firstName.length > 0 &&
-      this.state.lastName.length > 0 &&
-      this.state.address.length > 0 &&
-      this.state.city.length > 0 &&
-      this.state.postal_code.length > 0 &&
-      this.state.country.length > 0
+  //#region Skills Modal
+
+  handleCloseSkills() {
+    this.setState({ showSkills: false });
+  }
+
+  handleShowSkills() {
+    this.setState({ showSkills: true });
+  }
+
+  skills() {
+    return API.get("skills", "/skills");
+  }
+
+  renderSkillsList(skills) {
+    return [{}].concat(skills).map(
+      (skill, i) =>
+        i !== 0
+          ? <LinkContainer key={skill.skillId} to={`/skills/${skill.skillId}`}>
+              <ListGroupItem header={skill.content.trim().split("\n")[0]}>
+                {"Added: " + new Date(skill.createdAt).toLocaleString()}
+              </ListGroupItem>
+            </LinkContainer>
+          : <LinkContainer key="new" to="/skills/new">
+              <ListGroupItem>
+                <h4 className="text-primary">
+                  <b>{"\uFF0B"}</b> Add a new skill
+                </h4>
+              </ListGroupItem>
+            </LinkContainer>
     );
   }
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+  renderSkills() {
+    return (
+      <div className="skills">
+        <ListGroup>
+          {!this.state.isLoading && this.renderSkillsList(this.state.skills)}
+        </ListGroup>
+      </div>
+    );
   }
 
-  handleSubmit = async event => {
-    event.preventDefault();
-    this.setState({ isLoading: true });
+  //#endregion
 
-    var user = await Auth.currentAuthenticatedUser();
-    Auth.updateUserAttributes(user, {
-      'given_name': this.state.firstName,
-      'family_name': this.state.lastName,
-      'address': this.state.address,
-      'custom:city': this.state.city,
-      'custom:state': this.state.state,
-      'custom:postal_code': this.state.postal_code,
-      'custom:country': this.state.country
-    }).then(result => {
-      this.setState({ isLoading: false });
-      this.props.history.push("/");
-    }).catch(err => console.error(err));
-  }
+  //#region Individual Form
 
-  render() {
+  renderIndividualForm() {
     return (
       <div className="Signup">
         <hr />
@@ -85,6 +114,11 @@ export default class Settings extends Component {
           <HelpBlock>
             All fields with (<span className="text-danger">*</span>) are required
           </HelpBlock>
+            <ToggleButtonGroup type="radio" name="type" value={this.state.type} onChange={this.handleTypeChange}>
+              <ToggleButton className="btn-primary" value={individual}>Individual</ToggleButton>
+              <ToggleButton className="btn-primary" value={professional}>Professional</ToggleButton>
+            </ToggleButtonGroup>
+            <hr/>
           <FormGroup controlId="firstName" bsSize="large">
             <ControlLabel>First Name</ControlLabel>
             <span className="text-danger"> *</span><FormControl autoFocus type="text" value={this.state.firstName} onChange={this.handleChange} />
@@ -97,6 +131,10 @@ export default class Settings extends Component {
             <ControlLabel>Address</ControlLabel>
             <span className="text-danger"> *</span><FormControl type="text" value={this.state.address} onChange={this.handleChange} />
           </FormGroup>
+          <FormGroup controlId="postal_code" bsSize="large">
+            <ControlLabel>Postal Code</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.postal_code} onChange={this.handleChange} />
+          </FormGroup>
           <FormGroup controlId="city" bsSize="large">
             <ControlLabel>City</ControlLabel>
             <span className="text-danger"> *</span><FormControl type="text" value={this.state.city} onChange={this.handleChange} />
@@ -104,10 +142,6 @@ export default class Settings extends Component {
           <FormGroup controlId="state" bsSize="large">
             <ControlLabel>State</ControlLabel>
             <FormControl type="text" value={this.state.state} onChange={this.handleChange} />
-          </FormGroup>
-          <FormGroup controlId="postal_code" bsSize="large">
-            <ControlLabel>Postal Code</ControlLabel>
-            <span className="text-danger"> *</span><FormControl type="text" value={this.state.postal_code} onChange={this.handleChange} />
           </FormGroup>
           <FormGroup controlId="country" bsSize="large">
             <ControlLabel>Country</ControlLabel>
@@ -123,7 +157,6 @@ export default class Settings extends Component {
               <LoaderButton block bsSize="large" text="Change Password" />
             </LinkContainer>
           </FormGroup>
-
           <LoaderButton
             block
             bsStyle="primary"
@@ -137,5 +170,160 @@ export default class Settings extends Component {
         </form>
       </div>
     );
+  }
+
+  //#endregion Individual Form
+
+  //#region Professional Form
+
+  renderProfessionalForm() {
+    return (
+      <div className="Signup">
+        <hr />
+        <form onSubmit={this.handleSubmit}>
+          <HelpBlock>
+            All fields with (<span className="text-danger">*</span>) are required
+          </HelpBlock>
+            <ToggleButtonGroup type="radio" name="type" value={this.state.type} onChange={this.handleTypeChange}>
+              <ToggleButton bsStyle="primary" value={individual}>Individual</ToggleButton>
+              <ToggleButton bsStyle="primary" value={professional}>Professional</ToggleButton>
+            </ToggleButtonGroup>
+            <hr/>
+          <FormGroup controlId="firstName" bsSize="large">
+            <ControlLabel>First Name</ControlLabel>
+            <span className="text-danger"> *</span><FormControl autoFocus type="text" value={this.state.firstName} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="lastName" bsSize="large">
+            <ControlLabel>Last Name</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.lastName} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="address" bsSize="large">
+            <ControlLabel>Address</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.address} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="postal_code" bsSize="large">
+            <ControlLabel>Postal Code</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.postal_code} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="city" bsSize="large">
+            <ControlLabel>City</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.city} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="state" bsSize="large">
+            <ControlLabel>State</ControlLabel>
+            <FormControl type="text" value={this.state.state} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="country" bsSize="large">
+            <ControlLabel>Country</ControlLabel>
+            <span className="text-danger"> *</span><FormControl type="text" value={this.state.country} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup controlId="email" bsSize="large">
+            <LinkContainer to="/profile/email">
+              <LoaderButton block bsSize="large" text="Change Email" />
+            </LinkContainer>
+          </FormGroup>
+          <FormGroup controlId="password" bsSize="large">
+            <LinkContainer to="/profile/password">
+              <LoaderButton block bsSize="large" text="Change Password" />
+            </LinkContainer>
+          </FormGroup>
+          <FormGroup controlId="skills" bsSize="large">
+            <Button bsStyle="info" bsSize="large" onClick={this.handleShowSkills}>
+              Skills
+            </Button>
+          </FormGroup>
+          <LoaderButton
+            block
+            bsStyle="primary"
+            bsSize="large"
+            disabled={!this.validateForm()}
+            type="submit"
+            isLoading={this.state.isLoading}
+            text="Save"
+            loadingText="Saving…"
+          />
+
+          <Modal show={this.state.showSkills} onHide={this.handleCloseSkills}>
+            <Modal.Header closeButton>
+              <Modal.Title>Your Skills</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {/* Show skills here */}
+              {this.renderSkills()}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.handleCloseSkills}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+        </form>
+      </div>
+    );
+  }
+
+  //#endregion
+
+  validateForm() {
+    return (
+      this.state.firstName.length > 0 &&
+      this.state.lastName.length > 0 &&
+      this.state.address.length > 0 &&
+      this.state.city.length > 0 &&
+      this.state.postal_code.length > 0 &&
+      this.state.country.length > 0
+    );
+  }
+
+  handleChange = event => {
+    console.log("Event:", event);
+    console.log("setState:" + event.target.id + ":" + event.target.value);
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleTypeChange = event => {
+    console.log("type changed to", event);
+    this.setState({
+      type: event
+    });
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    this.setState({ isLoading: true });
+
+    var user = await Auth.currentAuthenticatedUser();
+    Auth.updateUserAttributes(user, {
+      'given_name': this.state.firstName,
+      'family_name': this.state.lastName,
+      'address': this.state.address,
+      'custom:city': this.state.city,
+      'custom:state': this.state.state,
+      'custom:postal_code': this.state.postal_code,
+      'custom:country': this.state.country,
+      'custom:type': this.state.type
+    }).then(result => {
+      this.setState({ isLoading: false });
+      this.props.history.push("/");
+    }).catch(err => console.error(err));
+
+    this.setState({ isLoading: false });
+  }
+
+  render() {
+    return (
+      <div>
+        {
+          this.state.type === professional ?
+          (
+            this.renderProfessionalForm()
+          )
+          :
+          (
+            this.renderIndividualForm()
+          )
+        }
+      </div>
+    )
   }
 }

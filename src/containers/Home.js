@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { ListGroupItem } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import "./Home.css";
-import { Link } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBlenderPhone, faWrench, faBroom, faCalculator, faUniversity, faHome } from '@fortawesome/free-solid-svg-icons'
@@ -110,47 +107,6 @@ export default class Home extends Component {
     this.setState({ isLoading: false });
   }
 
-  renderNotesList(notes) {
-    return [{}].concat(notes).map(
-      (note, i) =>
-        i !== 0
-          ? <LinkContainer
-            key={note.noteId}
-            to={`/notes/${note.noteId}`}
-          >
-            <ListGroupItem header={note.content.trim().split("\n")[0]}>
-              {"Created: " + new Date(note.createdAt).toLocaleString()}
-            </ListGroupItem>
-          </LinkContainer>
-          : <LinkContainer
-            key="new"
-            to="/notes/new"
-          >
-            {/* Render a "Create a new note" button even if the list is empty */}
-            <ListGroupItem>
-              <h4>
-                <b>{"\uFF0B"}</b> Create a new note
-              </h4>
-            </ListGroupItem>
-          </LinkContainer>
-    );
-  }
-
-  renderLander() {
-    return (
-      <div className="lander">
-        <div>
-          <Link to="/login" className="btn btn-info btn-lg">
-            Login
-        </Link>
-          <Link to="/signup" className="btn btn-success btn-lg">
-            Signup
-        </Link>
-        </div>
-      </div >
-    );
-  }
-
   renderCategoriesList(categories) {
     console.log("Categories:", categories);
     return [{}].concat(categories).map(
@@ -245,7 +201,6 @@ export default class Home extends Component {
         {this.renderRecommendedServices()}
         <ReviewCards />
         {/* {this.props.isAuthenticated ? this.renderNotes() : this.renderLander()} */}
-        {this.props.isAuthenticated ? null : this.renderLander()}
       </div>
     );
   }

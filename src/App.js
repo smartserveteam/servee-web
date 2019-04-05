@@ -58,8 +58,29 @@ class App extends Component {
   }
 
   // Update authenticated state
-  userHasAuthenticated = authenticated => {
+  userHasAuthenticated = async authenticated => {
     this.setState({ isAuthenticated: authenticated });
+    if (authenticated) {
+      var user = await Auth.currentAuthenticatedUser();
+      console.log("User:", user);
+      var attributes = await Auth.userAttributes(user); // Gets the latest attributes
+      console.log("Attributes:", attributes);
+      if (!attributes.find(a => a.Name === "email_verified")) {
+        console.log("Email verification is not complete");
+        this.props.history.push("/profile?message=incompleteEmailVerification");
+      }
+      if (
+          !attributes.find(a => a.Name === "address") ||
+          !attributes.find(a => a.Name === "given_name") ||
+          !attributes.find(a => a.Name === "family_name") ||
+          !attributes.find(a => a.Name === "custom:country") ||
+          !attributes.find(a => a.Name === "custom:city") ||
+          !attributes.find(a => a.Name === "custom:postal_code")
+      ) {
+        console.log("Profile is not complete");
+        this.props.history.push("/profile?message=incompleteProfile");
+      }
+    }
   }
 
   handleLogout = async event => {

@@ -28,7 +28,12 @@ Amplify.configure({
     endpoints: [
       {
         name: "notes",
-        endpoint: config.apiGateway.URL,
+        endpoint: config.apiGateway.URL_NOTES,
+        region: config.apiGateway.REGION
+      },
+      {
+        name: "skills",
+        endpoint: config.apiGateway.URL_SKILLS,
         region: config.apiGateway.REGION
       },
     ]
