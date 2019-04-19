@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Home.css";
+import { API } from "aws-amplify";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBlenderPhone, faWrench, faBroom, faCalculator, faUniversity, faHome } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +21,7 @@ export default class Home extends Component {
       isLoading: true,
       selectionOption: null,
       selectionLocation: null,
-      categories: [
+      topCategories: [
         {
           categoryId: 1,
           content: "Plumbers",
@@ -52,6 +53,7 @@ export default class Home extends Component {
           faIcon: "home"
         }
       ],
+      categories: [],
       recommendedServices: [
         {
           id: 1,
@@ -81,17 +83,6 @@ export default class Home extends Component {
       notes: []
     };
 
-    this.options = [
-      { value: 'accountant', label: 'Accountant' },
-      { value: 'architect', label: 'Architect' },
-      { value: 'appliance-repair', label: 'Appliance Repair' },
-      { value: 'french-teacher', label: 'French Teacher' },
-      { value: 'home-cleaning', label: 'Home Cleaning' },
-      { value: 'plumber', label: 'Plumber' },
-      { value: 'washing-machine-repair', label: 'Washing Machine Repair' },
-      { value: 'wedding-photographer', label: 'Wedding Photographer' }
-    ];
-
     this.locations = [
       { value: 'warsaw', label: 'Warsaw' },
       { value: 'krakow', label: 'Krakow' },
@@ -104,12 +95,23 @@ export default class Home extends Component {
       return;
     }
 
+    try {
+      const categories = await this.categories();
+      this.setState({ categories });
+    } catch (error) {
+      console.error(error);
+    }
+
     this.setState({ isLoading: false });
   }
 
-  renderCategoriesList(categories) {
-    console.log("Categories:", categories);
-    return [{}].concat(categories).map(
+  categories() {
+    return API.get("categories", "/categories");
+  }
+
+  renderTopCategoriesList(topCategories) {
+    console.log("Top Categories:", topCategories);
+    return [{}].concat(topCategories).map(
       (category, i) =>
         i !== 0 ?
           <div key={category.categoryId} className="col-sm-2 top-category">
@@ -124,10 +126,10 @@ export default class Home extends Component {
     );
   }
 
-  renderCategories() {
+  renderTopCategories() {
     return (
       <section className="top-categories">
-        {!this.state.isLoading && this.renderCategoriesList(this.state.categories)}
+        {!this.state.isLoading && this.renderTopCategoriesList(this.state.topCategories)}
       </section>
     );
   }
@@ -194,10 +196,10 @@ export default class Home extends Component {
           <h3 className="title-subtitle">Get instant access to reliable and affordable services</h3>
           <div className="form-inline title-form">
             <Select placeholder="Location" styles={colourStyles} className="title-location" onChange={this.handleLocationChange} options={this.locations} value={selectedLocation || this.locations.filter(location => location.value === 'warsaw')} />
-            <Select placeholder="Search for a service (e.g. Accountant, Plumber, ...)" styles={colourStyles} className="title-search" value={selectedOption} onChange={this.handleChange} options={this.options} />
+            <Select placeholder="Search for a service (e.g. Accountant, Plumber, ...)" styles={colourStyles} className="title-search" value={selectedOption} onChange={this.handleChange} options={this.state.categories} />
           </div>
         </section>
-        {this.renderCategories()}
+        {this.renderTopCategories()}
         {this.renderRecommendedServices()}
         <ReviewCards />
         {/* {this.props.isAuthenticated ? this.renderNotes() : this.renderLander()} */}
