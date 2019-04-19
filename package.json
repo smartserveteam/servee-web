@@ -7,6 +7,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "aws-amplify": "^1.1.22",
+    "jwt-decode": "^2.2.0",
     "react": "^16.8.5",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.8.5",

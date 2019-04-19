@@ -8,6 +8,7 @@ export default {
   apiGateway: {
     REGION: "eu-central-1",
     URL_NOTES: "https://3i6hhgx754.execute-api.eu-central-1.amazonaws.com/dev",
+    URL_CATEGORIES: "https://3i6hhgx754.execute-api.eu-central-1.amazonaws.com/dev",
     URL_SKILLS: "https://l7jo8umd8g.execute-api.eu-central-1.amazonaws.com/dev"
   },
   cognito: {

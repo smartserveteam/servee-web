@@ -6,6 +6,7 @@ import { Auth } from "aws-amplify";
 import "./App.css";
 import Routes from "./Routes";
 import config from "./config";
+var jwtDecode = require("jwt-decode");
 
 class App extends Component {
 
@@ -15,7 +16,8 @@ class App extends Component {
     // Initialize state
     this.state = {
       isAuthenticated: false,
-      isAuthenticating: true
+      isAuthenticating: true,
+      isAdmin: false
     };
   }
 
@@ -62,6 +64,17 @@ class App extends Component {
     this.setState({ isAuthenticated: authenticated });
     if (authenticated) {
       var user = await Auth.currentAuthenticatedUser();
+      await user.getSession((err, session) => {
+        if (err) {
+          alert(err);
+          return;
+        }
+        var sessionIdInfo = jwtDecode(session.getIdToken().jwtToken);
+        if (sessionIdInfo['cognito:groups'].includes("admins")) {
+          console.log("User is an admin");
+          this.setState({ isAdmin: true });
+        }
+        });
       console.log("User:", user);
       var attributes = await Auth.userAttributes(user); // Gets the latest attributes
       console.log("Attributes:", attributes);
@@ -109,6 +122,14 @@ class App extends Component {
             <Nav pullRight>
               {this.state.isAuthenticated
                 ? <Fragment>
+                  {this.state.isAdmin
+                  ? <Fragment>
+                  <LinkContainer to="/admin">
+                    <NavItem>Admin</NavItem>
+                  </LinkContainer>
+                  </Fragment>
+                  : <Fragment></Fragment>
+                  }
                   <LinkContainer to="/profile">
                     <NavItem>Profile</NavItem>
                   </LinkContainer>

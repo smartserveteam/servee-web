@@ -32,6 +32,11 @@ Amplify.configure({
         region: config.apiGateway.REGION
       },
       {
+        name: "categories",
+        endpoint: config.apiGateway.URL_CATEGORIES,
+        region: config.apiGateway.REGION
+      },
+      {
         name: "skills",
         endpoint: config.apiGateway.URL_SKILLS,
         region: config.apiGateway.REGION
