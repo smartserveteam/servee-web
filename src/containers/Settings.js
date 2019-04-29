@@ -6,7 +6,8 @@ import {
   ControlLabel, Button,
   ToggleButtonGroup, ToggleButton,
   Modal,
-  ListGroup, ListGroupItem
+  ListGroupItem,
+  ButtonToolbar
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./Settings.css";
@@ -22,6 +23,7 @@ export default class Settings extends Component {
 
     this.handleShowSkills = this.handleShowSkills.bind(this);
     this.handleCloseSkills = this.handleCloseSkills.bind(this);
+    this.handleSaveSkills = this.handleSaveSkills.bind(this);
 
     this.state = {
       isLoading: false,
@@ -34,7 +36,8 @@ export default class Settings extends Component {
       state: "",
       country: "",
       showSkills: false,
-      skills: []
+      skills: [],
+      userSkills: []
     };
   }
 
@@ -50,7 +53,8 @@ export default class Settings extends Component {
     this.setState({ city: userInfo.attributes[config.cognito.attributes.city] || "" });
     this.setState({ state: userInfo.attributes[config.cognito.attributes.state] || "" });
     this.setState({ country: userInfo.attributes[config.cognito.attributes.country] || "" });
-    this.setState({ type: userInfo.attributes[config.cognito.attributes.type] });
+    this.setState({ type: userInfo.attributes[config.cognito.attributes.type] || ""});
+    this.setState({ userSkills: (userInfo.attributes[config.cognito.attributes.skills] ? userInfo.attributes[config.cognito.attributes.skills].split(",") : userInfo.attributes[config.cognito.attributes.skills]) || ""});
 
     if (this.state.type === professional) {
       const skills = await this.skills();
@@ -69,23 +73,29 @@ export default class Settings extends Component {
     this.setState({ showSkills: true });
   }
 
+  handleSaveSkills(e) {
+    this.setState({ userSkills: e });
+    Auth.currentAuthenticatedUser().then((user) => {
+      return Auth.updateUserAttributes(user, { 'custom:skills': e.join(",")})
+    }).then((data) => console.log("Set Skills:", data))
+    .catch((err) => console.error("Set Skills:", err));
+  }
+
   skills() {
-    return API.get("skills", "/skills");
+    return API.get("categories", "/categories");
   }
 
   renderSkillsList(skills) {
+    console.log("All Skills:", skills);
     return [{}].concat(skills).map(
       (skill, i) =>
         i !== 0
-          ? <LinkContainer key={skill.skillId} to={`/skills/${skill.skillId}`}>
-              <ListGroupItem header={skill.content.trim().split("\n")[0]}>
-                {"Added: " + new Date(skill.createdAt).toLocaleString()}
-              </ListGroupItem>
-            </LinkContainer>
+          ? 
+          <ToggleButton key={skill.categoryId} value={skill.categoryId}>{skill.label}</ToggleButton>
           : <LinkContainer key="new" to="/skills/new">
               <ListGroupItem>
                 <h4 className="text-primary">
-                  <b>{"\uFF0B"}</b> Add a new skill
+                  <b>{"\uFF0B"}</b> Request a new skill to be added to this list
                 </h4>
               </ListGroupItem>
             </LinkContainer>
@@ -93,11 +103,14 @@ export default class Settings extends Component {
   }
 
   renderSkills() {
+    console.log("User Skills:", this.state.userSkills);
     return (
       <div className="skills">
-        <ListGroup>
-          {!this.state.isLoading && this.renderSkillsList(this.state.skills)}
-        </ListGroup>
+          <ButtonToolbar>
+            <ToggleButtonGroup type="checkbox" onChange={this.handleSaveSkills} value={this.state.userSkills} >
+              {!this.state.isLoading && this.renderSkillsList(this.state.skills)}
+            </ToggleButtonGroup>
+        </ButtonToolbar>
       </div>
     );
   }
@@ -252,7 +265,7 @@ export default class Settings extends Component {
               {this.renderSkills()}
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.handleCloseSkills}>Close</Button>
+              <Button bsStyle="primary" onClick={this.handleCloseSkills}>Close</Button>
             </Modal.Footer>
           </Modal>
         </form>

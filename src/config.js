@@ -24,7 +24,8 @@ export default {
       city: "custom:city",
       state: "custom:state",
       country: "custom:country",
-      type: "custom:type"
+      type: "custom:type",
+      skills: "custom:skills"
     }
   },
   social: {
