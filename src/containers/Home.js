@@ -98,6 +98,9 @@ export default class Home extends Component {
     try {
       const categories = await this.categories();
       this.setState({ categories });
+      console.log("Getting skills...");
+      const skills = await this.skills();
+      console.log("Skills:", skills);
     } catch (error) {
       console.error(error);
     }
@@ -107,6 +110,10 @@ export default class Home extends Component {
 
   categories() {
     return API.get("categories", "/categories");
+  }
+
+  skills() {
+    return API.get("skills", "/skills");
   }
 
   renderTopCategoriesList(topCategories) {
@@ -160,9 +167,10 @@ export default class Home extends Component {
     );
   }
 
-  handleChange = (selectedOption) => {
+  handleSkillChange = async (selectedOption) => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+    //alert(`Option selected:`, selectedOption);
+    this.props.history.push(`/professionals/${selectedOption.categoryId}`);
   }
 
   handleLocationChange = (selectedLocation) => {
@@ -196,7 +204,7 @@ export default class Home extends Component {
           <h3 className="title-subtitle">Get instant access to reliable and affordable services</h3>
           <div className="form-inline title-form">
             <Select placeholder="Location" styles={colourStyles} className="title-location" onChange={this.handleLocationChange} options={this.locations} value={selectedLocation || this.locations.filter(location => location.value === 'warsaw')} />
-            <Select placeholder="Search for a service (e.g. Accountant, Plumber, ...)" styles={colourStyles} className="title-search" value={selectedOption} onChange={this.handleChange} options={this.state.categories} />
+            <Select placeholder="Search for a service (e.g. Accountant, Plumber, ...)" styles={colourStyles} className="title-search" value={selectedOption} onChange={this.handleSkillChange} options={this.state.categories} />
           </div>
         </section>
         {this.renderTopCategories()}
