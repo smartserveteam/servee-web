@@ -14,7 +14,7 @@ import ChangePassword from "./containers/ChangePassword";
 import ChangeEmail from "./containers/ChangeEmail";
 import Signup from "./containers/Signup";
 import NewNote from "./containers/NewNote";
-import Notes from "./containers/Notes";
+import Professionals from "./containers/Professionals";
 import NotFound from "./containers/NotFound";
 
 export default ({ childProps }) =>
@@ -24,7 +24,7 @@ export default ({ childProps }) =>
     <UnauthenticatedRoute path="/signup" exact component={Signup} props={childProps} />
     <AppliedRoute path="/login/reset" exact component={ResetPassword} props={childProps} />
     <AuthenticatedRoute path="/notes/new" exact component={NewNote} props={childProps} />
-    <AuthenticatedRoute path="/notes/:id" exact component={Notes} props={childProps} />
+    <AuthenticatedRoute path="/professionals/:id" exact component={Professionals} props={childProps} />
     <AuthenticatedRoute path="/profile" exact component={Settings} props={childProps} />
     <AuthenticatedRoute path="/profile/password" exact component={ChangePassword} props={childProps} />
     <AuthenticatedRoute path="/profile/email" exact component={ChangeEmail} props={childProps} />

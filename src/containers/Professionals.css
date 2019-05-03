@@ -1,0 +1,206 @@
+.main {
+  border: 1px solid rgba(0, 0, 0, 0.121569);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: rgb(41, 43, 44);
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.cardheader {
+  background-color: rgb(250, 250, 250);
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 0px 10px 0px;
+}
+
+.cardheadersubtitle {
+  background-color: rgb(250, 250, 250);
+  color: darkgray;
+  padding: 0px 0px 10px 0px;
+}
+
+.cardbody {
+  box-sizing: border-box;
+  color: rgb(41, 43, 44);
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  padding: 12px 0px 12px 0px;
+}
+
+.rating {
+  display: inline-block;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #4caf50;
+  color: #fff;
+  font-size: 14px;
+  padding: 2px 4px 0;
+  vertical-align: middle;
+  font-weight: 700;
+}
+
+.cardfooter {
+  background-color: rgb(250, 250, 250);
+  display: block;
+  padding: 12px 20px;
+  color: darkgray;
+}
+
+.professional-section {
+  border-top: 1px solid hsla(0, 0%, 77%, 0.4);
+  margin-top: 60px;
+  display: block;
+  font-family: Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.professional-div {
+  width: 60%;
+  margin: 0 auto;
+  padding-bottom: 70px;
+}
+
+.professional-title {
+  font-size: 26px;
+  text-align: center;
+  font-weight: 600;
+  margin: 36px 0 0px;
+}
+
+.professional-items {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  padding: 10px 5% 10px 5%;
+  justify-content: center;
+}
+
+.professional-item {
+  width: 100%;
+  margin: 0px 15px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid hsla(0, 0%, 61%, 0.4);
+}
+
+.professional-item-profile {
+  display: table;
+}
+
+.professional-item-profile-pic {
+  width: 48px;
+  height: 48px;
+  background-image: url(https://res.cloudinary.com/urbanclap/image/upload/v1477058945/web-assets/spritesheet.png);
+  background-position: -295px -5px;
+  background-repeat: no-repeat;
+  display: table-cell;
+  vertical-align: middle;
+  border-radius: 24px;
+}
+
+.professional-item-profile-name {
+  display: table-cell;
+  padding-left: 20px;
+  vertical-align: middle;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1b1b1b;
+}
+
+.professional-item-rating-section {
+  padding-left: 10px;
+}
+
+.professional-item-rating {
+  display: table-cell;
+  border-radius: 2px;
+  background-color: #4caf50;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 5px 5px 5px;
+  vertical-align: middle;
+  font-weight: 700;
+}
+
+.professional-item-review {
+  font-size: 16px;
+  line-height: 1.56;
+  margin-top: 17px;
+  margin-bottom: 10px;
+  color: #646464;
+  height: 151px;
+}
+
+.facebook-review {
+  font-size: 13px;
+  margin: 0;
+  font-weight: 600;
+  margin-top: 12px;
+  color: #00aced;
+}
+
+.twitter-review {
+  font-size: 13px;
+  margin: 0;
+  font-weight: 600;
+  margin-top: 12px;
+  color: #3b5998;
+}
+
+.apple-review {
+  font-size: 13px;
+  margin: 0;
+  font-weight: 600;
+  margin-top: 12px;
+  color: rgba(45, 45, 45, 0.98);
+}
+
+.professional-professional-hired-section {
+  border-top: 1px solid hsla(0, 0%, 61%, 0.4);
+  margin-top: 10px;
+}
+
+.professional-professional-hired-title {
+  margin: 0;
+  letter-spacing: 0.9px;
+  color: #949494;
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.professional-professional-hired-info-section {
+  display: table;
+  margin-top: 18px;
+  width: 100%;
+}
+
+.professional-hired-profile-pic {
+  width: 48px;
+  height: 48px;
+  background-image: url(https://res.cloudinary.com/urbanclap/image/upload/v1477058945/web-assets/spritesheet.png);
+  background-position: -353px -5px;
+  background-repeat: no-repeat;
+  display: table-cell;
+  vertical-align: middle;
+  border-radius: 24px;
+}
+
+.professional-hired-name-score-section {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 14px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: #1b1b1b;
+}
