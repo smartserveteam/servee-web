@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, Label } from "react-bootstrap";
+import { ListGroup, Label } from "react-bootstrap";
 import "./Professionals.css";
 
 export default class Professionals extends Component {
